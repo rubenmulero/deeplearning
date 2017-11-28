@@ -10,3 +10,7 @@ This is a basic tutorial of how to use Keras to create a convolutional neural ne
 """
 
 
+import numpy
+import theano
+
+

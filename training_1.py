@@ -8,7 +8,6 @@ Created on Fri Nov 17 14:40:52 2017
 
 import tensorflow as tf
 
-# TODO review what is a shape of tensor
 
 # Building a computacional graph, a series of TS operations
 node1 = tf.constant(3.0, dtype=tf.float32)
