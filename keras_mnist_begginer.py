@@ -75,8 +75,9 @@ print(Y_train.shape)
 #
 model = Sequential()
 # Defining the input layer
-model.add(Convolution2D(32, 3, 3, activation='relu', input_shape=(1,28,28)))
+model.add(Convolution2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))
 # The input shape is the information of each image -> 1 depth (black o white), 28 width and 28 height
+# We need to put the input shape values ordered to feed correctly the convolutional neuronal network
 # The third parameter represent -> the number of convolution filters, the number of rows in each convolution the number
 # of columns in each convolution.
 # We are going to confirm this model printing its shape
