@@ -25,6 +25,10 @@ from keras.layers import Convolution2D, MaxPooling2D
 from keras.utils import np_utils
 # Loading Mnist dataset from KERAS
 from keras.datasets import mnist
+# We set up the image dimension ordering to use it like theano
+from keras import backend as K
+K.set_image_dim_ordering('th')
+
 
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
 
@@ -75,7 +79,8 @@ print(Y_train.shape)
 #
 model = Sequential()
 # Defining the input layer
-model.add(Convolution2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))
+model.add(Convolution2D(32, (3, 3), activation='relu', input_shape=(1, 28, 28)))
+
 # The input shape is the information of each image -> 1 depth (black o white), 28 width and 28 height
 # We need to put the input shape values ordered to feed correctly the convolutional neuronal network
 # The third parameter represent -> the number of convolution filters, the number of rows in each convolution the number
@@ -83,4 +88,38 @@ model.add(Convolution2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))
 # We are going to confirm this model printing its shape
 print(model.output_shape)
 
+# Now, we are going to add more layer to our CNN
+model.add(Convolution2D(32, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))                    # kill 25% of the inputs to avoid overfilling
 
+# Now, after adding the CNN, we are going to add the Dense layers to complete or fully connected network.
+model.add(Flatten())                                # Convert to n-dimensional layers to 1-dimensional layer to be used by the Dense layer.
+                                                    # We need to have only vector with all involved weights to be used by the dense layers
+model.add(Dense(128, activation='relu'))            # The first parameter is the output size
+model.add(Dropout(0.5))                             # Again, we will the 50% of the neurons
+model.add(Dense(10, activation='softmax'))          # Output size = 10 the total number of digits to classify
+
+
+########### Model compilation
+# After having defined how it looks like our model. We are going to compile it and add aditional fields like:
+#
+#   * training optimizer
+#   * loss function
+#   * metrics
+#   * ........
+model.compile(loss='categorical_crossentropy',      # Using the categorial cross entropy for functions that are categorial (We defined earlier)
+              optimizer='adam',                     # AdamOptimizer
+              metrics=['accuracy'])                 # User accuracy as metric to evaluate the quality of the model
+
+########### Fitting the model on training data
+model.fit(X_train, Y_train,
+          batch_size=32, epochs=10, verbose=1)
+# Here, we defined the batch size 32 inputs
+#
+# And the number of epoch to use in the training set (10 times)
+# The verbose function allows to know the information of the training
+
+########### Evaluating the model
+# Once we have trained our model. We can evaluate it to see the accuracy
+score = model.evaluate(X_test, Y_test, verbose=0)
