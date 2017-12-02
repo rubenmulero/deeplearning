@@ -123,3 +123,8 @@ model.fit(X_train, Y_train,
 ########### Evaluating the model
 # Once we have trained our model. We can evaluate it to see the accuracy
 score = model.evaluate(X_test, Y_test, verbose=0)
+
+
+### 60000/60000 [==============================] - 6s 94us/step - loss: 0.0263 - acc: 0.9916
+
+# Teste on ArchLinux with cuda 9, cudnn 7.04
