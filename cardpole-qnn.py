@@ -5,10 +5,11 @@ This is a simple test based on tables and reinforcement learning using gym libra
 example of cartpole
 
 
+# Example based on following blog link:
+
 https://keon.io/deep-q-learning/
 
 
-@author: Rubén Mulero
 """
 
 import random
@@ -18,7 +19,6 @@ from collections import deque
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam
-from keras import backend as K
 
 
 # In the reinforcement learning there is a function called Q Function, which is used to approximate the reward based on
@@ -127,6 +127,7 @@ if __name__ == "__main__":
     agent = DQNAgent(state_size, action_size)
     # agent.load("./save/cartpole-dqn.h5")
     done = False
+    max_reward = 0
     batch_size = 32
 
     for e in range(EPISODES):
@@ -143,8 +144,13 @@ if __name__ == "__main__":
             if done:
                 print("episode: {}/{}, score: {}, e: {:.2}"
                       .format(e, EPISODES, time, agent.epsilon))
+                if reward > max_reward:
+                    max_reward = reward
                 break
         if len(agent.memory) > batch_size:
             agent.replay(batch_size)
         # if e % 10 == 0:
 #     agent.save("./save/cartpole-dqn.h5")
+
+    # After finishing, we print the max reward obtained
+    print("Maximum reward obtained in the test is: "+max_reward)
